@@ -39,11 +39,17 @@ class PlaySoundsViewController: UIViewController {
         }
     }
 
+    func stopAllAudio() {
+        audioPlayer.stop()
+        audioEngine.stop()
+        audioEngine.reset()
+    }
+    
     // plays audio at specified speed
     // 1.0 = normal, 0.5 = slow, 1.5 = fast
     
     func playAudio(rate: Float) {
-        audioPlayer.stop()
+        stopAllAudio()
         audioPlayer.currentTime = 0
         audioPlayer.rate = rate
         audioPlayer.play()
@@ -51,15 +57,11 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playFastAudio(sender: UIButton) {
         //Play audio fast here....
-        audioEngine.stop()
-        audioEngine.reset()
         playAudio(fastplay)
     }
     
     @IBAction func playSlowAudio(sender: UIButton) {
         //Play audio sloooowly here....
-        audioEngine.stop()
-        audioEngine.reset()
         playAudio(slowplay)
     }
     
@@ -67,9 +69,7 @@ class PlaySoundsViewController: UIViewController {
     
     func playAudioWithVariablePitch(pitch: Float) {
         
-        audioPlayer.stop()
-        audioEngine.stop()
-        audioEngine.reset()
+        stopAllAudio()
         
         var audioPlayerNode = AVAudioPlayerNode()
         
@@ -98,10 +98,35 @@ class PlaySoundsViewController: UIViewController {
     }
     
     
+    @IBAction func playEchoAudio(sender: UIButton) {
+    }
+    
+    @IBAction func playReverbAudio(sender: UIButton) {
+        
+        stopAllAudio()
+        
+        var audioPlayerNode = AVAudioPlayerNode()
+        
+        audioEngine.attachNode(audioPlayerNode)
+        
+        var reverbEffect = AVAudioUnitReverb()
+        reverbEffect.loadFactoryPreset(AVAudioUnitReverbPreset(rawValue: 8)!)
+        reverbEffect.wetDryMix = 50
+        
+        audioEngine.attachNode(reverbEffect)
+        
+        audioEngine.connect(audioPlayerNode, to: reverbEffect, format: nil)
+        audioEngine.connect(reverbEffect, to: audioEngine.outputNode, format: nil)
+        
+        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
+        audioEngine.startAndReturnError(nil)
+        
+        audioPlayerNode.play()
+
+    }
+    
     @IBAction func stopAudio(sender: UIButton) {
-        audioPlayer.stop()
-        audioEngine.stop()
-        audioEngine.reset()
+        stopAllAudio()
     }
     
     override func didReceiveMemoryWarning() {

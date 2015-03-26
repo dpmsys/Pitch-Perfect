@@ -11,12 +11,14 @@ import AVFoundation
 
 class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
 
+    @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var micHelp: UILabel!
 
     var audioRecorder:AVAudioRecorder!
     var recordedAudio:RecordedAudio!
+    var paused: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
     }
     override func viewWillAppear(animated: Bool) {
         micHelp.text = "Tap to Record"
+        pauseButton.hidden = true
         stopButton.hidden = true
         recordButton.enabled = true
     }
@@ -44,15 +47,13 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         let pathArray = [dirPath, recordingName]
         let filePath = NSURL.fileURLWithPathComponents(pathArray)
         
-        //DEBUG
-        println(filePath)
-        
         var session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
         
         micHelp.text = "Recording in progress..."
         
         recordButton.enabled = false
+        pauseButton.hidden = false
         stopButton.hidden = false
 
         audioRecorder = AVAudioRecorder(URL: filePath, settings: nil, error: nil)
@@ -82,6 +83,18 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
                  PlaySoundsViewController
             let data = sender as RecordedAudio
             playSoundsVC.receivedAudio = data
+        }
+    }
+    
+    @IBAction func pauseRecording(sender: UIButton) {
+        if (paused) {
+            paused = false
+            micHelp.text = "Recording in progress..."
+            audioRecorder.record()
+        }else{
+            paused = true
+            micHelp.text = "Recording paused"
+            audioRecorder.pause()
         }
     }
     
