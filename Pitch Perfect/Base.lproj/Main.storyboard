@@ -31,7 +31,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="73" id="ww8-ZQ-5Dj"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="IowanOldStyle-Roman" family="Iowan Old Style" pointSize="15"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
@@ -54,6 +54,15 @@
                                     <action selector="stopRecording:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="WED-hq-uGH"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap microphone to record" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Scp-qB-mlk">
+                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="112" y="358" width="200" height="21"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -69,21 +78,28 @@
                             <constraint firstItem="t4d-ii-u8s" firstAttribute="top" secondItem="FdS-2I-HH7" secondAttribute="bottom" constant="8" symbolic="YES" id="bKJ-4X-EZI"/>
                             <constraint firstAttribute="centerY" secondItem="IJx-me-bQY" secondAttribute="centerY" id="cuH-RU-f6D"/>
                             <constraint firstAttribute="centerX" secondItem="t4d-ii-u8s" secondAttribute="centerX" constant="-2" id="lsN-bq-9Ri"/>
+                            <constraint firstAttribute="centerX" secondItem="Scp-qB-mlk" secondAttribute="centerX" constant="-12" id="m3x-Mu-FuH"/>
+                            <constraint firstItem="Scp-qB-mlk" firstAttribute="top" secondItem="t4d-ii-u8s" secondAttribute="bottom" constant="19" id="vHb-Ok-hs4">
+                                <variation key="widthClass=compact" constant="-79"/>
+                            </constraint>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="FdS-2I-HH7"/>
                                 <exclude reference="t4d-ii-u8s"/>
+                                <exclude reference="Scp-qB-mlk"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="2Qc-vX-EE3"/>
+                                <exclude reference="FgK-LY-Jvw"/>
+                                <exclude reference="m3x-Mu-FuH"/>
+                                <exclude reference="vHb-Ok-hs4"/>
                                 <exclude reference="CY1-6k-usg"/>
                                 <exclude reference="CZx-XP-kNS"/>
                                 <exclude reference="Auj-3Y-bcB"/>
                                 <exclude reference="YB4-EJ-7eY"/>
                                 <exclude reference="bKJ-4X-EZI"/>
                                 <exclude reference="lsN-bq-9Ri"/>
-                                <exclude reference="2Qc-vX-EE3"/>
-                                <exclude reference="FgK-LY-Jvw"/>
                                 <exclude reference="A4T-tM-dcB"/>
                             </mask>
                         </variation>
@@ -91,24 +107,28 @@
                             <mask key="subviews">
                                 <include reference="FdS-2I-HH7"/>
                                 <include reference="t4d-ii-u8s"/>
+                                <include reference="Scp-qB-mlk"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="2Qc-vX-EE3"/>
+                                <include reference="FgK-LY-Jvw"/>
+                                <exclude reference="Lni-Gm-MJK"/>
+                                <exclude reference="cuH-RU-f6D"/>
+                                <include reference="m3x-Mu-FuH"/>
+                                <include reference="vHb-Ok-hs4"/>
                                 <include reference="CY1-6k-usg"/>
                                 <include reference="CZx-XP-kNS"/>
                                 <include reference="Auj-3Y-bcB"/>
                                 <exclude reference="YB4-EJ-7eY"/>
                                 <exclude reference="bKJ-4X-EZI"/>
                                 <include reference="lsN-bq-9Ri"/>
-                                <include reference="2Qc-vX-EE3"/>
-                                <include reference="FgK-LY-Jvw"/>
-                                <exclude reference="Lni-Gm-MJK"/>
-                                <exclude reference="cuH-RU-f6D"/>
                                 <exclude reference="A4T-tM-dcB"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Record" id="Pew-sf-oGI"/>
                     <connections>
+                        <outlet property="micHelp" destination="Scp-qB-mlk" id="0Ni-GS-qjW"/>
                         <outlet property="recordButton" destination="IJx-me-bQY" id="v5V-vG-qXz"/>
                         <outlet property="recordingInProgress" destination="FdS-2I-HH7" id="7fp-si-gXp"/>
                         <outlet property="stopButton" destination="t4d-ii-u8s" id="snB-Mv-7aD"/>
@@ -117,7 +137,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-459" y="173"/>
+            <point key="canvasLocation" x="-484.5" y="173"/>
         </scene>
         <!--Play Sounds View Controller-->
         <scene sceneID="UPf-2V-vfL">
@@ -255,7 +275,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Yc-be-I31" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-55.5" y="72"/>
+            <point key="canvasLocation" x="175.5" y="173"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="scM-rW-orp">

@@ -14,6 +14,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
     @IBOutlet weak var recordingInProgress: UILabel!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet weak var micHelp: UILabel!
+
+    
    
     var audioRecorder:AVAudioRecorder!
     var recordedAudio:RecordedAudio!
@@ -49,6 +52,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         var session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
         
+        micHelp.hidden = true
         recordButton.enabled = false
         recordingInProgress.hidden = false
         stopButton.hidden = false
@@ -62,9 +66,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
         if (flag){
             //save the recorded audio
-            recordedAudio = RecordedAudio()
-            recordedAudio.filePathURL = recorder.url
-            recordedAudio.title = recorder.url.lastPathComponent
+            recordedAudio = RecordedAudio(filePathURL: recorder.url,title: recorder.url.lastPathComponent)
         
             //Move to the next scene aka perform seque
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
@@ -88,6 +90,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
     
     
     @IBAction func stopRecording(sender: UIButton) {
+        micHelp.hidden = false
         recordButton.enabled = true
         recordingInProgress.hidden = true
         stopButton.hidden = true
