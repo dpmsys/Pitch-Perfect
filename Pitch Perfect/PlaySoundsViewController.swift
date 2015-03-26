@@ -99,6 +99,29 @@ class PlaySoundsViewController: UIViewController {
     
     
     @IBAction func playEchoAudio(sender: UIButton) {
+        
+        stopAllAudio()
+        
+        var audioPlayerNode = AVAudioPlayerNode()
+        
+        audioEngine.attachNode(audioPlayerNode)
+        
+        var delayEffect = AVAudioUnitDelay()
+        delayEffect.delayTime = 0.5
+        delayEffect.feedback = 50
+        delayEffect.wetDryMix = 50
+        
+        audioEngine.attachNode(delayEffect)
+        
+        audioEngine.connect(audioPlayerNode, to: delayEffect, format: nil)
+        audioEngine.connect(delayEffect, to: audioEngine.outputNode, format: nil)
+        
+        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
+        audioEngine.startAndReturnError(nil)
+        
+        audioPlayerNode.play()
+
+        
     }
     
     @IBAction func playReverbAudio(sender: UIButton) {
