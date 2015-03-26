@@ -11,13 +11,10 @@ import AVFoundation
 
 class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
 
-    @IBOutlet weak var recordingInProgress: UILabel!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var micHelp: UILabel!
 
-    
-   
     var audioRecorder:AVAudioRecorder!
     var recordedAudio:RecordedAudio!
     
@@ -31,6 +28,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(animated: Bool) {
+        micHelp.text = "Tap to Record"
         stopButton.hidden = true
         recordButton.enabled = true
     }
@@ -52,9 +50,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         var session = AVAudioSession.sharedInstance()
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
         
-        micHelp.hidden = true
+        micHelp.text = "Recording in progress..."
+        
         recordButton.enabled = false
-        recordingInProgress.hidden = false
         stopButton.hidden = false
 
         audioRecorder = AVAudioRecorder(URL: filePath, settings: nil, error: nil)
@@ -74,7 +72,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         }else{
             println("Recording was not successful")
             recordButton.enabled = true
-            recordingInProgress.hidden = true
             stopButton.hidden = true
         }
     }
@@ -88,11 +85,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate{
         }
     }
     
-    
     @IBAction func stopRecording(sender: UIButton) {
-        micHelp.hidden = false
         recordButton.enabled = true
-        recordingInProgress.hidden = true
         stopButton.hidden = true
         
         audioRecorder.stop()

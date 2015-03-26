@@ -16,29 +16,26 @@ class PlaySoundsViewController: UIViewController {
     var audioEngine:AVAudioEngine!
     var audioFile:AVAudioFile!
     
+    // init constants for speed and pitch
     let fastplay: Float = 1.5
     let slowplay: Float = 0.5
+    let highpitch: Float = 1000
+    let lowpitch: Float = -1000
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
-//        if var filePath = NSBundle.mainBundle().pathForResource("movie_quote", ofType: "mp3") {
-//            var filePathUrl = NSURL.fileURLWithPath(filePath)
-//
-//        }else{
-//            println("the filePath is empty")
-//        }
         audioEngine = AVAudioEngine()
         audioFile = AVAudioFile(forReading: receivedAudio.filePathURL, error: nil)
         
         audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathURL, error: nil)
         audioPlayer.enableRate = true
         
+        // addresses low playback volume
         var overrideError: NSError?
         if AVAudioSession.sharedInstance().overrideOutputAudioPort(.Speaker, error: &overrideError) {
         }else{
-            println("error in overrideOutputAudioPort " + overrideError!.localizedDescription)
+            println("error in overrideOutputAudioPort")
         }
     }
 
@@ -47,20 +44,26 @@ class PlaySoundsViewController: UIViewController {
     
     func playAudio(rate: Float) {
         audioPlayer.stop()
+        audioPlayer.currentTime = 0
         audioPlayer.rate = rate
         audioPlayer.play()
     }
     
     @IBAction func playFastAudio(sender: UIButton) {
         //Play audio fast here....
+        audioEngine.stop()
+        audioEngine.reset()
         playAudio(fastplay)
     }
     
     @IBAction func playSlowAudio(sender: UIButton) {
         //Play audio sloooowly here....
+        audioEngine.stop()
+        audioEngine.reset()
         playAudio(slowplay)
     }
     
+    // handle playback with different pitch for chipmunk and vader voices.
     
     func playAudioWithVariablePitch(pitch: Float) {
         
@@ -73,7 +76,7 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.attachNode(audioPlayerNode)
         
         var changePitchEffect = AVAudioUnitTimePitch()
-        changePitchEffect.pitch = pitch 
+        changePitchEffect.pitch = pitch
         audioEngine.attachNode(changePitchEffect)
         
         audioEngine.connect(audioPlayerNode, to: changePitchEffect, format: nil)
@@ -87,11 +90,11 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func playChipmunkAudio(sender: UIButton) {
-        playAudioWithVariablePitch(1000)
+        playAudioWithVariablePitch(highpitch)
     }
     
     @IBAction func playVaderAudio(sender: UIButton) {
-        playAudioWithVariablePitch(-1000)
+        playAudioWithVariablePitch(lowpitch)
     }
     
     
