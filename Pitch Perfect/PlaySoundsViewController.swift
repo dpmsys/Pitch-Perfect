@@ -55,6 +55,36 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.play()
     }
     
+    // handle special effects (echo, reverb, pitch change)
+    func playAudioWithEffect(effect: NSObject) {
+        
+        stopAllAudio()
+        
+        var audioPlayerNode = AVAudioPlayerNode()
+        
+        audioEngine.attachNode(audioPlayerNode)
+        
+        audioEngine.attachNode(effect as AVAudioNode)
+        
+        audioEngine.connect(audioPlayerNode, to: effect as AVAudioNode, format: nil)
+        audioEngine.connect(effect as AVAudioNode, to: audioEngine.outputNode, format: nil)
+        
+        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
+        audioEngine.startAndReturnError(nil)
+        
+        audioPlayerNode.play()
+
+    }
+    
+    func playAudioWithVariablePitch(pitch: Float) {
+        
+        var changePitchEffect = AVAudioUnitTimePitch()
+        changePitchEffect.pitch = pitch   
+        
+        playAudioWithEffect(changePitchEffect)
+        
+    }
+
     @IBAction func playFastAudio(sender: UIButton) {
         //Play audio fast here....
         playAudio(fastplay)
@@ -67,27 +97,6 @@ class PlaySoundsViewController: UIViewController {
     
     // handle playback with different pitch for chipmunk and vader voices.
     
-    func playAudioWithVariablePitch(pitch: Float) {
-        
-        stopAllAudio()
-        
-        var audioPlayerNode = AVAudioPlayerNode()
-        
-        audioEngine.attachNode(audioPlayerNode)
-        
-        var changePitchEffect = AVAudioUnitTimePitch()
-        changePitchEffect.pitch = pitch
-        audioEngine.attachNode(changePitchEffect)
-        
-        audioEngine.connect(audioPlayerNode, to: changePitchEffect, format: nil)
-        audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
-        
-        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        audioEngine.startAndReturnError(nil)
-        
-        audioPlayerNode.play()
-
-    }
     
     @IBAction func playChipmunkAudio(sender: UIButton) {
         playAudioWithVariablePitch(highpitch)
@@ -100,51 +109,22 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playEchoAudio(sender: UIButton) {
         
-        stopAllAudio()
+        var echoEffect = AVAudioUnitDelay()
+        echoEffect.delayTime = 0.5
+        echoEffect.feedback = 50
+        echoEffect.wetDryMix = 50
         
-        var audioPlayerNode = AVAudioPlayerNode()
-        
-        audioEngine.attachNode(audioPlayerNode)
-        
-        var delayEffect = AVAudioUnitDelay()
-        delayEffect.delayTime = 0.5
-        delayEffect.feedback = 50
-        delayEffect.wetDryMix = 50
-        
-        audioEngine.attachNode(delayEffect)
-        
-        audioEngine.connect(audioPlayerNode, to: delayEffect, format: nil)
-        audioEngine.connect(delayEffect, to: audioEngine.outputNode, format: nil)
-        
-        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        audioEngine.startAndReturnError(nil)
-        
-        audioPlayerNode.play()
-
+        playAudioWithEffect(echoEffect)
         
     }
     
     @IBAction func playReverbAudio(sender: UIButton) {
         
-        stopAllAudio()
-        
-        var audioPlayerNode = AVAudioPlayerNode()
-        
-        audioEngine.attachNode(audioPlayerNode)
-        
         var reverbEffect = AVAudioUnitReverb()
         reverbEffect.loadFactoryPreset(AVAudioUnitReverbPreset(rawValue: 8)!)
         reverbEffect.wetDryMix = 50
         
-        audioEngine.attachNode(reverbEffect)
-        
-        audioEngine.connect(audioPlayerNode, to: reverbEffect, format: nil)
-        audioEngine.connect(reverbEffect, to: audioEngine.outputNode, format: nil)
-        
-        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        audioEngine.startAndReturnError(nil)
-        
-        audioPlayerNode.play()
+        playAudioWithEffect(reverbEffect)
 
     }
     
