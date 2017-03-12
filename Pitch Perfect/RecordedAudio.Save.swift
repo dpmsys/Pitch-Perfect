@@ -1,5 +1,5 @@
 //
-//  RecordedAudio.Save.swift
+//  RecordedAudioSave.swift
 //  Pitch Perfect
 //
 //  Created by David Mulvihill on 3/22/15.
@@ -9,10 +9,10 @@
 import Foundation
 
 class RecordedAudio: NSObject{
-    var filePathURL: NSURL!
+    var filePathURL: URL!
     var title: String!
     
-    init(filePathURL: NSURL!, title: String!) {
+    init(filePathURL: URL!, title: String!) {
         self.filePathURL = filePathURL
         self.title = title
     }
