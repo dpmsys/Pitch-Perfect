@@ -86,7 +86,7 @@ extension PlaySoundsViewController: AVAudioPlayerDelegate {
         // schedule to play and start the engine!
         audioPlayerNode.stop()
         audioPlayerNode.scheduleFile(audioFile, at: nil) {
-            
+            // closure to the scheduleFile call
             var delayInSeconds: Double = 0
             
             if let lastRenderTime = self.audioPlayerNode.lastRenderTime, let playerTime = self.audioPlayerNode.playerTime(forNodeTime: lastRenderTime) {
@@ -103,6 +103,8 @@ extension PlaySoundsViewController: AVAudioPlayerDelegate {
             RunLoop.main.add(self.stopTimer!, forMode: RunLoopMode.defaultRunLoopMode)
         }
         
+        configureUI(.playing)
+
         do {
             try audioEngine.start()
         } catch {
@@ -132,8 +134,23 @@ extension PlaySoundsViewController: AVAudioPlayerDelegate {
         }
     }
     
+    func pauseAudio() {
+        if (paused == true) {
+            paused = false
+            playHelp.text = "Playing..."
+            if let audioPlayerNode = audioPlayerNode {
+                audioPlayerNode.play()
+            }
+        }else{
+            paused = true
+            playHelp.text = "Paused"
+            if let audioPlayerNode = audioPlayerNode {
+                audioPlayerNode.pause()
+            }
+        }
+    }
     // MARK: Connect List of Audio Nodes
-    
+
     func connectAudioNodes(_ nodes: AVAudioNode...) {
         for x in 0..<nodes.count-1 {
             audioEngine.connect(nodes[x], to: nodes[x+1], format: audioFile.processingFormat)
@@ -145,21 +162,24 @@ extension PlaySoundsViewController: AVAudioPlayerDelegate {
     func configureUI(_ playState: PlayingState) {
         switch(playState) {
         case .playing:
+            playHelp.text = "Playing..."
             setPlayButtonsEnabled(false)
-            stopButton.isEnabled = true
         case .notPlaying:
+            playHelp.text = "Click mode icon above to play"
             setPlayButtonsEnabled(true)
-            stopButton.isEnabled = false
         }
     }
     
     func setPlayButtonsEnabled(_ enabled: Bool) {
         snailButton.isEnabled = enabled
-        chipmunkButton.isEnabled = enabled
         rabbitButton.isEnabled = enabled
+        chipmunkButton.isEnabled = enabled
         vaderButton.isEnabled = enabled
         echoButton.isEnabled = enabled
         reverbButton.isEnabled = enabled
+        stopButton.isEnabled = !enabled
+        pauseButton.isEnabled = !enabled
+        paused = false
     }
 
     func showAlert(_ title: String, message: String) {
